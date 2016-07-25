@@ -1,0 +1,39 @@
+INSTALL.x86-64                           Philip Gill  Sep 8, 2007
+
+This  file   is  a  supplement  to   INSTALL.ALL  concerning  the
+installation of SNOPT on a machine with x86-64 architecture.
+
+(1) The  all   64-bit  version  of   the  GNU  g95   compiler  is
+    recommended.  To use g95, set F77  to be the path to your g95
+    installation:
+       % export F77=/usr/bin/g95          (your site might vary)
+       % ./configure
+       % make FFLAGS="-O -fPIC" CFLAGS="-O -fPIC" CXXFLAGS="-O -fPIC"
+
+(2) Following the  invocation of the configure  command, the make
+    must explicitly  specify the -fPIC option for  the Fortran, C
+    and C++  compilers.  This  forces the generation  of position
+    independent  code (PIC)  needed for  the construction  of the
+    shared object libraries.
+
+    The  syntax for  the  make command  must  include the  option
+     "-fPIC": e.g.,
+       % make FFLAGS="-O -fPIC" CFLAGS="-O -fPIC" CXXFLAGS="-O -fPIC"
+
+(3) If you  want to build the  SNOPT cmex interface  on a machine
+    with  a 64-bit  architecture you  must build  fortran objects
+    with integers that are the same length as integers defined by
+    the C  compiler.  The  gcc compiler uses  8 byte  integers by
+    default.  The g77  compiler cannot be used because  it uses 4
+    byte integers, even on a 64-bit machine.
+
+    When  using  gfortran it  is  important  to  use the  Fortran
+    language  option "-fdefault-integer-8" as  one of  the FFLAGS
+    compiler options.
+
+    To use gfortran, set F77 to be the path to gfortran
+       % export F77=/usr/bin/gfortran    (your site might vary)
+       % ./configure
+       % make FFLAGS="... -fPIC -fdefault-integer-8" (see above)
+
+

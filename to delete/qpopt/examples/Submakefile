@@ -1,0 +1,42 @@
+EXAMPLES_SRCDIR = $(top_srcdir)/examples
+EXAMPLES_OBJDIR = $(top_builddir)/examples
+
+
+_EXE    =      lpoptmain        qpoptmain
+_EXE_AR =      lpoptmain_ar     qpoptmain_ar
+
+EXAMPLES_EXE     = $(_EXE:%=$(EXAMPLES_OBJDIR)/%)
+EXAMPLES_EXE_AR  = $(_EXE_AR:%=$(EXAMPLES_OBJDIR)/%)
+
+QPOPT_LIBS    =   -lqpopt     -lblas
+QPOPT_AR      =  libqpopt    libblas
+QPOPT_AR_LIBS = $(QPOPT_AR:%=$(LIBDIR)/%.a)
+
+all: all_examples
+clean: examples_clean
+veryclean: examples_veryclean
+distclean: examples_veryclean
+
+all_examples: all_qpopt $(EXAMPLES_OBJDIR) $(EXAMPLES_EXE) $(EXAMPLES_EXE_AR)
+
+$(EXAMPLES_OBJDIR)/lpoptmain: $(EXAMPLES_OBJDIR)/lpoptmain.o
+	$(FC) $(FFLAGS) $(RFLAGS) $^ -o $@ -L$(LIBDIR) $(QPOPT_LIBS) $(LIBRARIES)
+
+$(EXAMPLES_OBJDIR)/qpoptmain: $(EXAMPLES_OBJDIR)/qpoptmain.o
+	$(FC) $(FFLAGS) $(RFLAGS) $^ -o $@ -L$(LIBDIR) $(QPOPT_LIBS) $(LIBRARIES)
+
+$(EXAMPLES_OBJDIR)/lpoptmain_ar: $(EXAMPLES_OBJDIR)/lpoptmain.o            $(QPOPT_AR_LIBS)
+	$(FC)  $(FFLAGS) $< -o $@ $(QPOPT_AR_LIBS) $(LIBRARIES)
+
+$(EXAMPLES_OBJDIR)/qpoptmain_ar: $(EXAMPLES_OBJDIR)/qpoptmain.o            $(QPOPT_AR_LIBS)
+	$(FC)  $(FFLAGS) $< -o $@ $(QPOPT_AR_LIBS) $(LIBRARIES)
+
+examples_clean:
+	rm -f $(EXAMPLES_OBJDIR)/*.o
+
+examples_veryclean: examples_clean
+	-rm -f $(EXAMPLES_EXE) $(EXAMPLES_EXE_AR)
+	-rm -f $(EXAMPLES_OBJDIR)/*.out
+
+$(EXAMPLES_OBJDIR)/%.o : $(EXAMPLES_SRCDIR)/%.f
+	$(FC) -c $(FFLAGS) $< -o $@

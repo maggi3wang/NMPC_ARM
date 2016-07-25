@@ -1,0 +1,321 @@
+INSTALL.ALL                            Philip Gill  April 3, 2008
+
+This  file contains  installation instructions  for  the package
+SNOPT. For a  brief description of  this packages,
+see the accompanying README.FIRST file.
+
+ The installation  instructions that  follow assume that  you are
+installing on  a machine  that runs a  version of  the Unix-based
+operating  system, such  as  Linux, MacOSX,  SunOS  or IRIX.  For
+instructions on how to  install on alternative operating systems,
+please see the ALTERNATIVE OPERATING SYSTEMS section below.
+
+THE BOTTOM LINE
+---------------
+
+ If  your system  has all  the necessary  prerequisites  (see the
+PREREQUISITES  section below)  the installation  process  will be
+quite simple. There is no  harm in trying the installation before
+you read  the PREREQUISITES  section. If the  installation fails,
+you will learn what is missing.
+
+ Those familiar with the  GNU installation process should find no
+surprises  here.  Use  the cd  command to  the  working directory
+$SNOPT containing  the SNOPT distribution.  At  the command line,
+type
+
+    ./configure
+    make
+
+ The package f2c is now included as part of the distribution.  To
+configure SNOPT without the built-in version of f2c, use:
+
+    ./configure --without-f2c
+    make
+
+ The current directory should  now contain a working distribution
+which may be  used immediately.  Try it out.  At the command line
+type:
+
+   cd examples
+   ./run snmaina ../lib
+
+ Snopt should have solved a sample optimization problem for you.
+
+ If this didn't work,  read the PREREQUISITES and TROUBLESHOOTING
+sections. To learn how to install into a (more or less) permanent
+location, read the INSTALLATION LOCATION section.
+
+ If sections below suggest setting certain options before running
+configure,  you may  safety  run "configure"  followed by  "make"
+again.
+
+ A  more thorough test  involves the  solution of  22 precompiled
+sample  problems by  the user-callable  interfaces  snOptA, snOpt
+(aka snOptB),  snOptC, npOpt and sqOpt.  In  the snopt directory,
+type:
+
+    ./configure
+    make
+    make check
+
+This may  take a while.  Relax and  have a nice cup  of tea while
+you are waiting.  The log file  of a "make check" done on a Linux
+PC is provided  in the file "check.log0".  If  the generated file
+check.log  looks  very different  from  the  output  in the  file
+snopt/examples/check.log,   then  read   the   PREREQUISITES  and
+TROUBLESHOOTING sections. (Some of  the examples run by the "make
+check" have local solutions.   The results from your "make check"
+may vary.)
+
+
+PREREQUISITES
+-------------
+
+ To  use the  SNOPT package  effectively,  you need  to have  two
+pieces of software installed on you machine:
+
+1) A working  FORTRAN 77 compiler. The configure  script will try
+   to locate a FORTRAN compiler  for you.  If it cannot find one,
+   or you do not like the one it chooses, set the F77 environment
+   variable and run configure  again. In bash you set environment
+   variables with a command like:
+
+	   export F77=/the/correct/dir/f77
+           ./configure
+           make FFLAGS="compiler flags for my f77"
+
+   Notice that there  are no spaces surrounding the  "=". In csh,
+   you set an environment variable with a command like
+
+	   setenv F77 /the/correct/dir/f77
+
+   If you don't understand this, ask your system administrator.
+
+   SNOPT may also be installed using the F90 or F95 compilers. In
+   this case, replace the f77 by  f90 or f95 in the definition of
+   F77.  For   example,  suitable  F77   and  FFLAGS  environment
+   variables for the NAGWare f95 compiler are:
+
+	   export F77=/usr/local/bin/f95
+           ./configure
+           make FFLAGS="-g -C=undefined -fixed -v  -maxcontin=1000"
+
+   (assuming that the binary executable for the compiler is in the
+    directory /usr/local/bin).
+
+2) GNU  make -  A utility  to  maintain groups  of programs.  You
+   almost certainly  have a version of make  installed, which may
+   or may not be gnu make. To find out, type:
+
+       make --version
+
+   If you get anything other than a message telling you that this
+   is a version of GNU make, try:
+
+       gmake --version
+
+   If  "gmake"  isn't  GNU  make  either,  then  GNU  make  isn't
+   installed. You  may obtain a copy at  www.gnu.org. Although we
+   try not to be too tricky,  we do use some features of GNU make
+   (and we trust that we will get more predictable behavior using
+   GNU make than we would  if we used vendor-specific versions of
+   make.)
+
+3) f2c  environment   variables  -  if   you  plan  to   use  the
+   "--without-f2c" option when you configure SNOPT, you will need
+   to define  the following environment  variables before running
+   the configure script.
+
+       export F2CLIBRARY=/your/local/f2cLibrary/location
+       export F2CINCLUDE=/your/local/f2cInclude/location
+       export F2C=/your/local/f2c/location
+
+4) The snadiopt  automatic differentiation package.   If you wish
+   to  use  the  SNOPT/ADIFOR automatic  differentiation  package
+   snadiopt, edit the file  $SNOPT/GNUmakefile and add the module
+   snadiopt to the line:
+
+       modules =  src examples csrc cexamples cmex cppsrc
+
+   You must also set the AD_LIB and AD_HOME environment variables
+   before running the configure script.  Normally AD_HOME will be
+   set to the  full path of a directory whose  name is similar to
+   "ADIFOR2.O". Similarly,  AD_LIB will  be point to  a directory
+   with a name similar to "ADIFOR2.O.lib".  See the ADIFOR manual
+   for more information.
+
+   The configure script will try to guess the right value for the
+   environment  variable AD_OS,  but  you may  need  to set  this
+   variable if configure guesses wrong.
+
+   The SNADIOPT package requires two additional packages.
+
+   perl - A text processing language. Perl is a popular language,
+   and is  available on most  systems these days. Make  sure that
+   the  version  of perl  that  you are  using  is  version 5  or
+   better. You may find the version number by typing:
+
+      perl --version
+
+   (If that command doesn't give you a version number, then it is
+   definitely NOT version 5.)
+
+   The configure script will try to locate a version of perl that
+   is installed  on your machine. If  you want to  use a specific
+   version of perl, set the PERL environment variable to point to
+   the perl  executable before running configure. If  perl is not
+   installed  on your  machine,  copies are  freely available  at
+   www.cpan.org.
+
+
+   ADIFOR  -  ADIFOR is  a  package  that differentiates  FORTRAN
+   code.  It  is unlikely  that  you  received  ADIFOR with  this
+   distribution.   You will  find  instruction on  how to  obtain
+   ADIFOR on the web page:
+
+      http://www-unix.mcs.anl.gov/autodiff/ADIFOR/
+
+   This  package  is  designed  to  work with  ADIFOR  version  2
+   (specifically version 2.0D).
+
+   There  is no  way for  the "configure"  script to  guess where
+   ADIFOR has  been installed, so  you *must* set the  AD_LIB and
+   AD_HOME environment variables before running configure.
+
+   The configure script will try to guess the right value for the
+   environment  variable AD_OS,  but  you may  need  to set  this
+   variable if configure guesses wrong.
+
+INSTALLATION LOCATION
+---------------------
+
+By default, if you type:
+
+   make install
+
+(after you have run configure),  this package will try to install
+itself into the /usr/local directory tree. Of course, you will be
+unable  to install to  this location  unless you  have privileged
+access to  the machine. Furthermore, even if  you have privileged
+access,  your system administrator  may want  you to  install new
+packages in a different location.
+
+ If  you are  unsure  that  the package  should  be installed  in
+/usr/local, we recommend that  you install in $HOME/software (the
+pattern  $HOME will be  expanded to  the full  path of  your home
+directory). It  is not  difficult to change  the location  of the
+installation later.  You may install in $HOME/software by typing:
+
+	./configure --prefix=$HOME/software
+	make install
+
+You may choose any other location by setting the appropriate
+prefix.
+
+
+TROUBLESHOOTING
+---------------
+
+Read the PREREQUISITES section before you read this one.
+
+PROBLEM) "configure" didn't complete successfully.
+
+SOLUTION) This could  be a bug in our  configure script. However,
+    the   configure   script   is   designed  to   validate   the
+    configuration  of your  system, and  will stop  under certain
+    conditions  (for  instance,  if  the FORTRAN  compiler  can't
+    create executables.)
+
+
+PROBLEM) Typing "make" results in
+
+        "make: Fatal error: No arguments to build"
+
+    or some similar message.
+
+SOLUTION) The version of make  that you are using is probably not
+    GNU make.  Try typing "gmake" instead. If  that doesn't work,
+    then GNU  make is not  installed. See PREREQUISITES  for more
+    information.
+
+
+PROBLEM) Typing "make" results in
+    ./lib/libsnopt.so: undefined reference to `etime_'
+
+SOLUTION} your FORTRAN libraried do not appear to have the timing
+     routine etime on your  system.  Edit the subroutine s1cpu in
+     file snopt/src/sn10mach.f  to either switch  off all timing,
+     or to call an alternative system timer.
+
+
+PROBLEM) The  example program compiles  (and links) successfully,
+    but the "make check" command does not work correctly.
+
+SOLUTION)   It   may   be    necessary   to   modify   the   file
+    snopt/src/sn10mach.f,  which  contains the  machine-dependent
+    subroutines:
+
+    Subr.        Function
+    ------       --------
+
+    s1cpu      Calls the f77 timer etime by default.
+               This routine can be modified to either switch
+               off all timing, or to call an alternative
+               system timer.  There is timer support for:
+               Solaris; Irix; AIX;
+               Gnu g77, NagWare f95 and Absoft f77;
+               WinNT with DEC F90; PC Lahey Fortran;
+               DEC OpenVMS; DEC VAX/VMS with C runtime library.
+
+    s1open     Opens files used by SNOPT.
+               The shell script examples/runLP uses default
+               fortran logical file names of the form "fort.x".
+               s1file must be changed if this is not the
+               default for your system.
+
+    It is VERY UNLIKELY that any of the following files will
+    need to be modified:
+
+    s1eps      Sets the machine precision.
+    s1flmx     Sets the largest floating-point number.
+    s1flmn     Sets the smallest floating-point number.
+    s1intmx    Sets the largest positive integer.
+
+    s1inpt     Sets the Fortran standard input
+    s1outpt    Sets the Fortran standard output
+
+    The  distributed versions  of  s1eps, s1flmx  and s1flmn  are
+    defined for IEEE standard  arithmetic. s1mxint assumes 32 bit
+    integers.
+
+    s1clos     Closes a file.
+    s1envt     Defines the environment in which SNOPT is
+               being used (currently empty).
+    s1page     Produces optional page throw in printed output.
+
+
+PROBLEM) One or two of  the problems attempted by "make check" do
+    not work.
+
+SOLUTION)  The  problem  is  most  likely  with  the  flags  that
+    determine the level of  Fortran compiler optimization. If the
+    level is too high, you may see inconsistent results.
+
+
+
+ALTERNATIVE OPERATING SYSTEMS
+-----------------------------
+
+ The  FORTRAN code  used in  this  package and  the FORTRAN  code
+generated  by  SNOPT   is  reasonably  close to  the  FORTRAN  77
+standard, and  should compile on  most platforms. The  source for
+the  ADIFOR libraries  and instructions  on how  to  compile this
+source  are provided  as  part of  the  ADIFOR distribution.  The
+ADIFOR  program itself,  however,  is only  available on  certain
+platforms, currently certain versions of Unix and Windows. See:
+
+   http://www-unix.mcs.anl.gov/autodiff/ADIFOR/
+
+for more information. We have no control over which platforms are
+supported.

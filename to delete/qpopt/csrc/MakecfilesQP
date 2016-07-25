@@ -1,0 +1,64 @@
+# Mike Gertz and Philip Gill  09-January-2000
+#
+# =pod
+# csrc/makecfilesQP
+#
+# "make -f MakecfilesQP" will use f2c to create C source files for
+# the qpopt distribution from the standard qpopt FORTRAN source files.
+#
+# The qpopt distribution is assumed to be in the current directory.
+# If this is not the case, set the macro QPOPTSRC to the correct location
+# of the qpopt distribution.
+#
+# =cut
+CFILES = mcsubs.c opsubs.c blas1.c     blas2.c     f06subs.c \
+	 cmsubs.c rzsubs.c utcomsubs.c lpoptsubs.c qpoptsubs.c
+
+F2COPTS = -ec -a -A
+# ec causes common block definitions to be written to external files.
+# Thus common blocks only get defined once (although they are declared
+# externally all over the place).
+#
+# -a causes f2c to generate automatic rather than static local variables
+#     whenever possible. In C, any local variable not declared as static
+#     is by default automatic.
+#
+# -A produces ANSI, rather than traditional, C
+
+# Assume the QPOPT distribution is in the current directory.
+QPOPTSRC=../src
+
+all: $(CFILES)
+
+# I don't like listing all dependencies explicitly, but couldn't
+# find a better way.  If new files are added, new dependencies must
+# also be written.
+mcsubs.c: $(QPOPTSRC)/mcsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+opsubs.c: $(QPOPTSRC)/opsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+blas1.c: $(QPOPTSRC)/blas1.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+blas2.c: $(QPOPTSRC)/blas2.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+f06subs.c: $(QPOPTSRC)/f06subs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+cmsubs.c: $(QPOPTSRC)/cmsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+rzsubs.c: $(QPOPTSRC)/rzsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+utcomsubs.c: $(QPOPTSRC)/utcomsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+lpoptsubs.c: $(QPOPTSRC)/lpoptsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f
+
+qpoptsubs.c: $(QPOPTSRC)/qpoptsubs.f
+	f2c $(F2COPTS) $(QPOPTSRC)/$*.f

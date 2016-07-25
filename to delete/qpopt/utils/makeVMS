@@ -1,0 +1,22 @@
+#!/bin/sh
+
+QPOPT=$HOME/qpopt
+PROBLEM=$QPOPT/examples
+SRC=$QPOPT/src
+VMS=$QPOPT/VMS
+
+cp -p $PROBLEM/lpoptmain.opt $VMS/lpoptmain.opt
+cp -p $PROBLEM/qpoptmain.opt $VMS/qpoptmain.opt
+cp -p $PROBLEM/lpoptmain.f   $VMS/lpoptmain.for
+cp -p $PROBLEM/qpoptmain.f   $VMS/qpoptmain.for
+cp -p $SRC/mcsubs.f          $VMS/mcsubs.for
+cp -p $SRC/opsubs.f          $VMS/opsubs.for
+cp -p $SRC/blas1.f           $VMS/blas1.for
+cp -p $SRC/blas2.f           $VMS/blas2.for
+cp -p $SRC/f06subs.f         $VMS/f06subs.for
+cp -p $SRC/cmsubs.f          $VMS/cmsubs.for
+cp -p $SRC/utcomsubs.f       $VMS/utcomsubs.for
+cp -p $SRC/rzsubs.f          $VMS/rzsubs.for
+cp -p $SRC/lpoptsubs.f       $VMS/lpoptsubs.for
+cp -p $SRC/qpoptsubs.f       $VMS/qpoptsubs.for
+

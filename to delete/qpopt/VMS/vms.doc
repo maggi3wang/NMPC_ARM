@@ -1,0 +1,49 @@
+To install LPOPT/QPOPT on DEC VAX/VMS systems, proceed as follows.
+
+ 1. Transfer all files from the floppy disk to a directory
+    of your choice.  For descriptive purposes we
+    suppose that the directory is [me.qpopt].
+
+ 2. Set the default directory:
+          set default [me.qpopt.VMS]
+
+ 4. Define "make" to mean "execute vmsmake.com":
+          make :== @[me.qpopt]vmsmake
+    (This could be done permanently in your login.com file.)
+
+ 5. Edit the file  qpoptmain.for  and change the assignment of the
+    logical variable  byname  so that default Fortran unit numbers
+    of the form for004, etc., are used by the example program.
+          Change    byname = .true.   to    byname = .false.
+
+ 6. Create subdirectories to contain "debug" and "optimized" object code:
+          create /dir [.dbg]
+          create /dir [.opt]
+    We will use only the [.opt] directory here.  See vmsmake.com for
+    discussion of the [.dbg] directory.
+
+ 7. Enter the directory for optimized code:
+          set def [.opt]
+
+ 8. Compile and link, using the files qpopt.mak and qpopt.lnk
+    and creating qpopt.exe:
+          make qpopt
+    (Ignore messages about missing .obj files.  They are being created
+    for the first time!  Next time you do "make" they won't appear.)
+
+ 9. Run the test program, using the supplied data file qpopt.opt:
+       copy [-]qpopt.opt []
+       open/read    for004 qpoptmain.opt
+       define/nolog for009 qpoptmain.lis
+       define/nolog for010 qpoptmain.sum
+       run qpoptmain
+       close for004
+    Compare results with the QPOPT User's Guide.
+
+10. Solution of further problems requires user-specific code
+    (the main program) and files *.mak, *.lnk, *.opt similar to those
+    used above. A *.com file would be useful for doing most of the
+    commands in the preceding step.
+
+11. If qpopt is to be used by many people, it may be appropriate to
+    dispense with the "make" facility and use an object library.

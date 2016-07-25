@@ -1,0 +1,8 @@
+Please see the files *.doc
+
+vms.doc  is for DEC VAX/VMS.
+
+For these and other systems we have to assume that you know
+how to run Fortran programs.  The file lpopt.mak lists the
+Fortran files that are needed for lpopt and the supplied test
+program.

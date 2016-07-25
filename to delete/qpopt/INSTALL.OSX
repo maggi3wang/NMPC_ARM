@@ -1,0 +1,50 @@
+INSTALL.OSX - Philip Gill and Josh Griffin   April 5, 2007
+
+This file is a supplement to INSTALL.ALL and concerns the
+installation of SNOPT on a system running OSX.
+
+The instructions assume that the GNU g77 (aka f77), gcc and g++
+compilers are installed (e.g.,  via FinkCommander).
+
+ 1. As root, make gmake synonymous for gnumake.
+
+     %  cd /usr/bin
+     %  ln -s gnumake gmake
+
+ 2. If   the  f77  binary   distributed  with   FinkCommander  is
+    configured  with shared  libraries disabled,  then  the SNOPT
+    shared libraries must be disabled in the SNOPT build:
+
+    home/snopt7%  ./configure enable_shared=no
+
+This should be enough if you are running the TIGER OS.
+For vanilla OSX you might need to do a bit more.
+
+ 3. In some cases the configure script is unable to determine the
+    correct  path to  libg2c.  It  may be  necessary to  edit the
+    GNUmakefile and install the correct path as follows:
+
+     The line:
+        FLIBS="stuff created in by the configure script"
+     should be replaced by:
+        FLIBS=-L/sw/lib -lg2c
+     or the path to the directory containing libg2c.a.
+
+    Alternatively, run make with an explicit argument as follows:
+       % make FLIBS="-L/sw/lib -lg2c"
+
+ 4. The distribution includes a mex files for PPC and Intel OSX
+       % home/snopt7/matlab/precompiled_snoptcmex.mexmac
+       % home/snopt7/matlab/precompiled_snoptcmex.mexmaci
+
+    Rename one of these files to be the Mac OSX mex interface.
+    e.g.,
+       % mv precompiled_snoptcmex.mexmaci snoptcmex.mexmaci
+
+    When creating your own snoptcmex.mexmac, it may be necessary
+    to ensure that mex is on the path. Use the command:
+       % export PATH=$PATH:$MATLAB_DIR/bin
+    If necessary, export the MATLAB location as an environment
+    variable so that the call to mex can find the mexopts.sh file.
+       % export MATLAB=$MATLAB_DIST_LOCATION
+

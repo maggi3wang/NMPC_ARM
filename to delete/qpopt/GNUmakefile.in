@@ -1,0 +1,84 @@
+$$SHELL = @SHELL@
+
+INSTALL       = @INSTALL@
+prefix        = @prefix@
+exec_prefix   = @exec_prefix@
+datadir       = @datadir@
+bindir        = @bindir@
+libdir        = @libdir@
+mandir        = @mandir@
+top_srcdir    = @top_srcdir@
+top_builddir  = @top_srcdir@
+
+CC            = @CC@
+FC            = @F77@
+FCFLAGS       = @FFLAGS@
+CFLAGS        = @CFLAGS@
+FFLAGS        = @FFLAGS@
+LDFLAGS       = @LDFLAGS@
+LD_SOFLAGS    = @LD_SOFLAGS@
+FLIBS         = @FLIBS@
+enable_shared = @enable_shared@
+RANLIB        = @RANLIB@
+LIBDIR        = $(top_builddir)/lib
+BINDIR        = $(top_builddir)/bin
+MANDIR        = $(top_builddir)/man
+FCLIBS        = @FCLIBS@
+BLAS          = @BLAS@
+GNU_MAKE      = @GNU_MAKE@
+F2C_ENABLED   = @F2C_ENABLED@
+F2CINCLUDE    = @F2CINCLUDE@
+F2CLIBRARY    = @F2CLIBRARY@
+F2C           = @F2C@
+# Available modules are: src examples csrc fmex cmex
+# Edit the next line to remove any unwanted modules and make again.
+modules       = @modules@
+
+OUTPUT_OPTION = -o $@ # Use the -o option when generating .o files.
+
+all: all_f2c $(top_builddir)
+install:
+check:
+clean:
+veryclean:
+
+distclean: veryclean
+	-rm -f *~
+	-rm -f so_locations
+	-rmdir $(top_builddir)/man/man1
+	-rmdir $(top_builddir)/man
+	-rmdir $(top_builddir)/lib
+	-rmdir $(top_builddir)/bin
+	-rm -f conftest.f conftest.fpp conftest
+	-rm -f config.cache config.log config.status GNUmakefile
+
+.SUFFIXES:
+
+include $(patsubst %,%/Submakefile,$(modules))
+include $(patsubst %,%/Submakefile,f2c)
+
+$(top_builddir):
+	if [ ! -d $@ ]; then mkdir $@; fi
+
+%.o : %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+%.o : %.f
+	$(FC) -c $(FFLAGS) $< -o $@
+
+%.o : %.f90
+	$(FC) -c $(FFLAGS) $< -o $@
+	-mv -f *.mod  $(<D)
+
+check:
+	@echo "Checking the distribution---this may take a while..."
+	cd examples; ./check  ../lib > check.log
+
+config.status:  configure
+	./config.status --recheck
+
+GNUmakefile: GNUmakefile.in config.status
+	./config.status
+
+
+# DO NOT DELETE

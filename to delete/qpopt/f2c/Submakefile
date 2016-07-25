@@ -1,0 +1,36 @@
+all_f2c: f2c
+
+ifeq ($(F2C_ENABLED),f2c_enabled)
+
+f2c: f2clibdir f2cbindir f2cincdir libf2c f2c-exe
+
+f2clibdir:
+	if [ ! -d $(top_builddir)/lib ]; then mkdir $(top_builddir)/lib; fi
+
+f2cbindir:
+	if [ ! -d $(top_builddir)/bin ]; then mkdir $(top_builddir)/bin; fi
+
+f2cincdir:
+	if [ ! -d $(top_builddir)/include ]; then mkdir $(top_builddir)/include; fi
+
+libf2c: f2c-exe
+	gmake -C f2c/libf2c
+	mv f2c/libf2c/libf2c.a $(top_builddir)/lib/libf2c.a
+	-ranlib $(top_builddir)/lib/libf2c.a
+
+f2c-exe: f2cbindir f2cbindir f2cincdir
+	gmake -C f2c/src
+	mv f2c/src/f2c $(top_builddir)/bin/f2c
+	cp f2c/src/f2c.h $(top_builddir)/include/f2c.h
+
+endif # f2c was enabled
+
+f2c-clean:
+	-rm -f f2c/libF77/*.o f2c/libI77/*.o
+	-rm -f f2c/libF77/*.a f2c/libI77/*.a
+	-rm -f f2c/src/*.o f2c/src/f2c
+
+veryclean:  f2c-clean
+	-rm -f $(top_builddir)/lib/libf2c.a
+	-rm -f $(top_builddir)/bin/f2c
+	-rm -f $(top_builddir)/include/f2c.h

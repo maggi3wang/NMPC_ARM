@@ -1,0 +1,6 @@
+$ link  'P1'  /exe=lpopt       -
+    lpoptmain,                 - ! put problem-dependent routines here
+    mcsubs, opsubs,            -
+    blas1, blas2, f06subs,     -
+    cmsubs, utcomsubs, rzsubs, -
+    lpoptsubs
